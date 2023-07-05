@@ -42,6 +42,13 @@ void MX_ADC_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void StartAdc(void);
+uint16_t GetIrAdc(uint8_t idx);
+uint16_t GetTempAdc(void);
+
+static inline uint32_t AdcToVoltage(uint32_t adc)
+{
+    return adc * 3300 / 4096;
+}
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

@@ -108,7 +108,12 @@ int main(void)
     if(SysTimeSpan(lastTime) >= SYSTIME_SECOND(1))
     {
         lastTime = GetSysTime();
-        CL_LOG_LINE("%us", GetSysTime() / 1000);
+        CL_LOG_LINE("adc: %d, %d, %d, %d, %d", 
+          AdcToVoltage(GetIrAdc(0)),
+          AdcToVoltage(GetIrAdc(1)),
+          AdcToVoltage(GetIrAdc(2)),
+          AdcToVoltage(GetIrAdc(3)),
+          AdcToVoltage(GetTempAdc()));
     }
   }
   /* USER CODE END 3 */

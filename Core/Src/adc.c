@@ -199,4 +199,14 @@ void StartAdc(void)
 {
   HAL_ADC_Start_DMA(&hadc, (uint32_t*)adcResult, CL_ARRAY_LENGTH(adcResult));
 }
+
+uint16_t GetIrAdc(uint8_t idx)
+{
+  return adcResult[idx];
+}
+
+uint16_t GetTempAdc(void)
+{
+  return adcResult[4];
+}
 /* USER CODE END 1 */
