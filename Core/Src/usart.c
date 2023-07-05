@@ -21,7 +21,11 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+CL_QUEUE_DEF_INIT(usart1RecvQueue, 256, uint8_t, );
+CL_QUEUE_DEF_INIT(usart1SendQueue, 256, uint8_t, );
 
+CL_QUEUE_DEF_INIT(usart2RecvQueue, 256, uint8_t, );
+CL_QUEUE_DEF_INIT(usart2SendQueue, 256, uint8_t, );
 /* USER CODE END 0 */
 
 /* USART1 init function */
@@ -80,6 +84,7 @@ void MX_USART1_UART_Init(void)
   LL_USART_ConfigAsyncMode(USART1);
   LL_USART_Enable(USART1);
   /* USER CODE BEGIN USART1_Init 2 */
+  LL_USART_EnableIT_RXNE(USART1);
 
   /* USER CODE END USART1_Init 2 */
 
@@ -140,11 +145,38 @@ void MX_USART2_UART_Init(void)
   LL_USART_ConfigAsyncMode(USART2);
   LL_USART_Enable(USART2);
   /* USER CODE BEGIN USART2_Init 2 */
-
+  LL_USART_EnableIT_RXNE(USART2);
   /* USER CODE END USART2_Init 2 */
 
 }
 
 /* USER CODE BEGIN 1 */
+//--------------------------------------
+static inline void EnableTxe(USART_TypeDef *Usartx)
+{
+    LL_USART_EnableIT_TXE(Usartx);
+}
 
+#include "stdio.h"
+#pragma import(__use_no_semihosting)
+
+struct __FILE
+{
+    int handle;
+};
+
+FILE __stdout;
+
+void _sys_exit(int x)
+{
+    x = x;
+}
+
+int fputc(int ch, FILE *f)
+{
+    uint8_t data = ch;
+    CL_QueueAdd(&usart1SendQueue, &data);
+    EnableTxe(USART1);
+    return ch;
+}
 /* USER CODE END 1 */

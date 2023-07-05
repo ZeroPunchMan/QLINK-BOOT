@@ -3,18 +3,27 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/Drivers/STM32F0xx_HAL_Driver/Inc"
             ],
             "defines": [
                 "USE_FULL_LL_DRIVER",
                 "USE_HAL_DRIVER",
-                "'STM32F030x8"
+                "'STM32F030x8",
+                "uint32_t=unsigned int",
+                "int32_t=int",
+                "uint16_t=unsigned short",
+                "int16_t=short",
+                "uint8_t=unsigned char",
+                "int8_t=char",
+                "__STATIC_INLINE=static inline",
+                "__attribute__(x)=",
+                "FLASH",
+                "USART1",
+                "USART2"
             ],
-            "windowsSdkVersion": "10.0.22000.0",
-            "compilerPath": "cl.exe",
-            "cStandard": "c17",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "windows-msvc-x64"
+            "cStandard": "c99"
+            
         }
     ],
     "version": 4

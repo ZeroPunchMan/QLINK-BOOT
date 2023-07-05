@@ -2,6 +2,29 @@
     "files.associations": {
         "main.h": "c",
         "stm32f0xx_hal.h": "c",
-        "stm32f0xx_hal_conf.h": "c"
-    }
+        "stm32f0xx_hal_conf.h": "c",
+        "stm32f0xx_ll_system.h": "c",
+        "stm32f0xx.h": "c",
+        "cl_common.h": "c",
+        "adc.h": "c",
+        "systime.h": "c",
+        "usart.h": "c",
+        "stm32f0xx_ll_exti.h": "c",
+        "stm32f0xx_hal_def.h": "c",
+        "stm32f0xx_hal_flash.h": "c"
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "MDK-ARM": true,
+        "common/clib/.vscode": true,
+        "common/clib/mcu_testcase": true,
+        "common/clib/testcase": true,
+        "common/clib/Makefile": true,
+    },
+    "workbench.editor.enablePreview": false
 }

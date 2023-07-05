@@ -29,17 +29,59 @@ extern "C" {
 #include "main.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "cl_queue.h"
 /* USER CODE END Includes */
 
 /* USER CODE BEGIN Private defines */
 
+CL_QUEUE_DECL(usart1RecvQueue);
+CL_QUEUE_DECL(usart1SendQueue);
+
+CL_QUEUE_DECL(usart2RecvQueue);
+CL_QUEUE_DECL(usart2SendQueue);
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+//***************************usart1*******************************
+//从usart1发送队列获取字节
+static inline CL_Result_t Usart1_PollSendByte(volatile uint8_t* out)
+{
+    return CL_QueuePoll(&usart1SendQueue, (void *)out);
+}
+
+//从usart1接收队列获取1字节
+static inline CL_Result_t Usart1_PollRecvByte(volatile uint8_t* out)
+{
+    return CL_QueuePoll(&usart1RecvQueue, (void *)out);
+}
+
+//往usart1接收队列填入1字节
+static inline CL_Result_t Usart1_AddRecvByte(volatile uint8_t in)
+{
+    return CL_QueueAdd(&usart1RecvQueue, (void *)&in);
+}
+
+//************************usart2*****************************************
+//从usart2发送队列获取字节
+static inline CL_Result_t Usart2_PollSendByte(volatile uint8_t* out)
+{
+    return CL_QueuePoll(&usart2SendQueue, (void *)out);
+}
+
+//从usart2接收队列获取1字节
+static inline CL_Result_t Usart2_PollRecvByte(volatile uint8_t* out)
+{
+    return CL_QueuePoll(&usart2RecvQueue, (void *)out);
+}
+
+//往usart2接收队列填入1字节
+static inline CL_Result_t Usart2_AddRecvByte(volatile uint8_t in)
+{
+    return CL_QueueAdd(&usart2RecvQueue, (void *)&in);
+}
 
 /* USER CODE END Prototypes */
 
