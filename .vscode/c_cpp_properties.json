@@ -6,9 +6,9 @@
                 "${workspaceFolder}/**"
             ],
             "defines": [
-                "STM32F030x8",
+                "USE_FULL_LL_DRIVER",
                 "USE_HAL_DRIVER",
-                "USE_STM32F0XX_NUCLEO"
+                "'STM32F030x8"
             ],
             "windowsSdkVersion": "10.0.22000.0",
             "compilerPath": "cl.exe",

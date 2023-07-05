@@ -21,7 +21,7 @@
 #include "adc.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "cl_common.h"
 /* USER CODE END 0 */
 
 ADC_HandleTypeDef hadc;
@@ -184,5 +184,9 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
+uint16_t adcResult[50];
+void StartAdc(void)
+{
+  HAL_ADC_Start_DMA(&hadc, (uint32_t*)adcResult, CL_ARRAY_LENGTH(adcResult));
+}
 /* USER CODE END 1 */
