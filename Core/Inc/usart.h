@@ -46,38 +46,38 @@ void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 //***************************usart1*******************************
-//ä»usart1å‘é€é˜Ÿåˆ—è·å–å­—èŠ‚
+//´Óusart1·¢ËÍ¶ÓÁĞ»ñÈ¡×Ö½Ú
 static inline CL_Result_t Usart1_PollSendByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart1SendQueue, (void *)out);
 }
 
-//ä»usart1æ¥æ”¶é˜Ÿåˆ—è·å–1å­—èŠ‚
+//´Óusart1½ÓÊÕ¶ÓÁĞ»ñÈ¡1×Ö½Ú
 static inline CL_Result_t Usart1_PollRecvByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart1RecvQueue, (void *)out);
 }
 
-//å¾€usart1æ¥æ”¶é˜Ÿåˆ—å¡«å…¥1å­—èŠ‚
+//Íùusart1½ÓÊÕ¶ÓÁĞÌîÈë1×Ö½Ú
 static inline CL_Result_t Usart1_AddRecvByte(volatile uint8_t in)
 {
     return CL_QueueAdd(&usart1RecvQueue, (void *)&in);
 }
 
 //************************usart2*****************************************
-//ä»usart2å‘é€é˜Ÿåˆ—è·å–å­—èŠ‚
+//´Óusart2·¢ËÍ¶ÓÁĞ»ñÈ¡×Ö½Ú
 static inline CL_Result_t Usart2_PollSendByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart2SendQueue, (void *)out);
 }
 
-//ä»usart2æ¥æ”¶é˜Ÿåˆ—è·å–1å­—èŠ‚
+//´Óusart2½ÓÊÕ¶ÓÁĞ»ñÈ¡1×Ö½Ú
 static inline CL_Result_t Usart2_PollRecvByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart2RecvQueue, (void *)out);
 }
 
-//å¾€usart2æ¥æ”¶é˜Ÿåˆ—å¡«å…¥1å­—èŠ‚
+//Íùusart2½ÓÊÕ¶ÓÁĞÌîÈë1×Ö½Ú
 static inline CL_Result_t Usart2_AddRecvByte(volatile uint8_t in)
 {
     return CL_QueueAdd(&usart2RecvQueue, (void *)&in);
