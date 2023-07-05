@@ -339,7 +339,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>STM32F030x8,USE_HAL_DRIVER,USE_STM32F0XX_NUCLEO</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Inc;..\Driver\Inc;..\;..\Application</IncludePath>
+              <IncludePath>..\Inc;..\Driver\Inc;..\;..\Application;..\common\clib\inc;..\common</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -381,7 +381,7 @@
       </TargetOption>
       <Groups>
         <Group>
-          <GroupName>Example/MDK-ARM</GroupName>
+          <GroupName>asm</GroupName>
           <Files>
             <File>
               <FileName>startup_stm32f030x8.s</FileName>
@@ -391,7 +391,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>Drivers/BSP/STM32F0xx-Nucleo</GroupName>
+          <GroupName>bsp</GroupName>
           <Files>
             <File>
               <FileName>stm32f0xx_nucleo.c</FileName>
@@ -472,6 +472,61 @@
               <FileName>stm32f0xx_hal_gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Driver\Src\stm32f0xx_hal_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f0xx_hal_usart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\Src\stm32f0xx_hal_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f0xx_hal_usart_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Driver\Src\stm32f0xx_hal_usart_ex.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>clib</GroupName>
+          <Files>
+            <File>
+              <FileName>cl_event_system.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\clib\src\cl_event_system.c</FilePath>
+            </File>
+            <File>
+              <FileName>cl_fsm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\clib\src\cl_fsm.c</FilePath>
+            </File>
+            <File>
+              <FileName>cl_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\clib\src\cl_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>cl_pool.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\clib\src\cl_pool.c</FilePath>
+            </File>
+            <File>
+              <FileName>cl_queue.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\clib\src\cl_queue.c</FilePath>
+            </File>
+            <File>
+              <FileName>cl_serialize.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\clib\src\cl_serialize.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>app</GroupName>
+          <Files>
+            <File>
+              <FileName>systime.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\common\systime.c</FilePath>
             </File>
           </Files>
         </Group>

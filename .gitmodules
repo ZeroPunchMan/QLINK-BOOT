@@ -1,0 +1,3 @@
+[submodule "common/clib"]
+	path = common/clib
+	url = https://github.com/ZeroPunchMan/clib.git
