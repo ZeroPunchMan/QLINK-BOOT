@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "systime.h"
 #include "cl_log.h"
+#include "helper.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,12 +109,8 @@ int main(void)
     if(SysTimeSpan(lastTime) >= SYSTIME_SECOND(1))
     {
         lastTime = GetSysTime();
-        CL_LOG_LINE("adc: %d, %d, %d, %d, %d", 
-          AdcToVoltage(GetIrAdc(0)),
-          AdcToVoltage(GetIrAdc(1)),
-          AdcToVoltage(GetIrAdc(2)),
-          AdcToVoltage(GetIrAdc(3)),
-          AdcToVoltage(GetTempAdc()));
+        CL_LOG_LINE("temp: %d", 
+          NtcAdcToTemp_10K(GetTempAdc()));
     }
   }
   /* USER CODE END 3 */

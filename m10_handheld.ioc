@@ -2,7 +2,7 @@
 ADC.ClockPrescaler=ADC_CLOCK_SYNC_PCLK_DIV4
 ADC.ContinuousConvMode=ENABLE
 ADC.DMAContinuousRequests=ENABLE
-ADC.EOCSelection=ADC_EOC_SINGLE_CONV
+ADC.EOCSelection=ADC_EOC_SEQ_CONV
 ADC.IPParameters=ClockPrescaler,ContinuousConvMode,DMAContinuousRequests,EOCSelection,SamplingTime,Overrun
 ADC.Overrun=ADC_OVR_DATA_OVERWRITTEN
 ADC.SamplingTime=ADC_SAMPLETIME_239CYCLES_5
