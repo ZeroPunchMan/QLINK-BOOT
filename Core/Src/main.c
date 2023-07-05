@@ -26,6 +26,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "systime.h"
+#include "cl_log.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -104,9 +105,10 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     static uint32_t lastTime = 0;
-    if(SysTimeSpan(lastTime) >= SYSTIME_SECOND(10))
+    if(SysTimeSpan(lastTime) >= SYSTIME_SECOND(1))
     {
         lastTime = GetSysTime();
+        CL_LOG_LINE("%us", GetSysTime() / 1000);
     }
   }
   /* USER CODE END 3 */
