@@ -1,0 +1,6 @@
+MDK-ARM/build
+MDK-ARM/DebugConfig
+MDK-ARM/RTE
+MDK-ARM/*.uvguix.*
+*.scvd
+*.lst
