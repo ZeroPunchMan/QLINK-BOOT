@@ -106,11 +106,13 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
     static uint32_t lastTime = 0;
-    if(SysTimeSpan(lastTime) >= SYSTIME_SECOND(1))
+    if(SysTimeSpan(lastTime) >= 1000)
     {
         lastTime = GetSysTime();
-        CL_LOG_LINE("temp: %d", 
-          NtcAdcToTemp_10K(GetTempAdc()));
+        // CL_LOG_LINE("temp: %d", 
+        //   NtcAdcToTemp_10K(GetTempAdc()));
+        uint8_t testData[] = {1,2,3,4,5};
+        Usartx_Send(USART2, testData, 0, 5);
     }
   }
   /* USER CODE END 3 */

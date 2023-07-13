@@ -45,39 +45,35 @@ void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+CL_Result_t Usartx_Send(USART_TypeDef *Usartx, const uint8_t *data, uint16_t offset, uint16_t len);
+
 //***************************usart1*******************************
-//从usart1发送队列获取字节
 static inline CL_Result_t Usart1_PollSendByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart1SendQueue, (void *)out);
 }
 
-//从usart1接收队列获取1字节
 static inline CL_Result_t Usart1_PollRecvByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart1RecvQueue, (void *)out);
 }
 
-//往usart1接收队列填入1字节
 static inline CL_Result_t Usart1_AddRecvByte(volatile uint8_t in)
 {
     return CL_QueueAdd(&usart1RecvQueue, (void *)&in);
 }
 
 //************************usart2*****************************************
-//从usart2发送队列获取字节
 static inline CL_Result_t Usart2_PollSendByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart2SendQueue, (void *)out);
 }
 
-//从usart2接收队列获取1字节
 static inline CL_Result_t Usart2_PollRecvByte(volatile uint8_t* out)
 {
     return CL_QueuePoll(&usart2RecvQueue, (void *)out);
 }
 
-//往usart2接收队列填入1字节
 static inline CL_Result_t Usart2_AddRecvByte(volatile uint8_t in)
 {
     return CL_QueueAdd(&usart2RecvQueue, (void *)&in);

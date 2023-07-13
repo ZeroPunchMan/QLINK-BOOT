@@ -151,11 +151,31 @@ void MX_USART2_UART_Init(void)
 }
 
 /* USER CODE BEGIN 1 */
-//--------------------------------------
 static inline void EnableTxe(USART_TypeDef *Usartx)
 {
     LL_USART_EnableIT_TXE(Usartx);
 }
+
+CL_Result_t Usartx_Send(USART_TypeDef *Usartx, const uint8_t *data, uint16_t offset, uint16_t len)
+{
+    CL_QueueInfo_t *queue;
+    if (Usartx == USART2)
+        queue = &usart2SendQueue;
+    else
+        return CL_ResInvalidParam;
+
+    if (CL_QueueFreeSpace(queue) < len)
+        return CL_ResFailed;
+
+    for (uint16_t i = 0; i < len; i++)
+        CL_QueueAdd(queue, (void *)&data[i + offset]);
+
+    EnableTxe(Usartx);
+
+    return CL_ResSuccess;
+}
+
+//--------------------------------------
 
 #include "stdio.h"
 #pragma import(__use_no_semihosting)
