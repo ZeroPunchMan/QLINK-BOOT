@@ -812,6 +812,31 @@
               <FileType>1</FileType>
               <FilePath>..\Application\helper.c</FilePath>
             </File>
+            <File>
+              <FileName>comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\comm.c</FilePath>
+            </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>crc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>firmware_info.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\firmware_info.c</FilePath>
+            </File>
+            <File>
+              <FileName>dwin_protocol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\dwin_protocol.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

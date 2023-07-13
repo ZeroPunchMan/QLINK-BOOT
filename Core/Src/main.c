@@ -25,9 +25,12 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "cl_event_system.h"
 #include "systime.h"
 #include "cl_log.h"
 #include "helper.h"
+#include "comm.h"
+#include "button.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -69,7 +72,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+  CL_EventSysInit();
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -100,19 +103,18 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   StartAdc();
+  Comm_Init();
+  Button_Init();
   while (1)
   {
     /* USER CODE END WHILE */
-
+    Comm_Process();
+    Button_Process();
     /* USER CODE BEGIN 3 */
     static uint32_t lastTime = 0;
     if(SysTimeSpan(lastTime) >= 1000)
     {
         lastTime = GetSysTime();
-        // CL_LOG_LINE("temp: %d", 
-        //   NtcAdcToTemp_10K(GetTempAdc()));
-        uint8_t testData[] = {1,2,3,4,5};
-        Usartx_Send(USART2, testData, 0, 5);
     }
   }
   /* USER CODE END 3 */

@@ -6,7 +6,10 @@
                 "${workspaceFolder}/**",
                 "${workspaceFolder}/Drivers/STM32F0xx_HAL_Driver/Inc",
                 "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F0xx/Include",
-                "${workspaceFolder}/Application"
+                "${workspaceFolder}/Application",
+                "${workspaceFolder}/Core/Inc",
+                "${workspaceFolder}/common/clib/inc",
+                "${workspaceFolder}/common"
             ],
             "defines": [
                 "USE_FULL_LL_DRIVER",
@@ -27,7 +30,6 @@
                 "GPIOA"
             ],
             "cStandard": "c99",
-            "intelliSenseMode": "linux-gcc-arm",
             "browse": {
                 "limitSymbolsToIncludedHeaders": true
             }

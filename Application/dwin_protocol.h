@@ -6,8 +6,7 @@
 
 typedef enum
 {
-    ChanIdx_TouchPad = 0,
-    ChanIdx_HandHeld,
+    ChanIdx_ToMainBoard = 0,
     ChanIdx_Max,
 } DwinProtoChanIdx_t;
 

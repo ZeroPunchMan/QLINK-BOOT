@@ -113,29 +113,14 @@ static inline bool ParseByte(DwinChannelParam_t *channel, uint8_t b)
 
 void DwinProtocol_Process(void)
 {
-    volatile uint8_t data;
-    for (int i = 0; i < 100; i++)
-    {
-        if (Uart4_PollRecvByte(&data) == CL_ResSuccess)
-        {
-            if (ParseByte(&channelParams[ChanIdx_TouchPad], data))
-            {
-                CL_EventSysRaise(CL_Event_RecvDwinPack, ChanIdx_TouchPad, &channelParams[ChanIdx_TouchPad].recvPacket);
-            }
-        }
-        else
-        {
-            break;
-        }
-    }
-
+    uint8_t data;
     for (int i = 0; i < 100; i++)
     {
         if (Usart2_PollRecvByte(&data) == CL_ResSuccess)
         {
-            if (ParseByte(&channelParams[ChanIdx_HandHeld], data))
+            if (ParseByte(&channelParams[ChanIdx_ToMainBoard], data))
             {
-                CL_EventSysRaise(CL_Event_RecvDwinPack, ChanIdx_HandHeld, &channelParams[ChanIdx_HandHeld].recvPacket);
+                CL_EventSysRaise(CL_Event_RecvDwinPack, ChanIdx_ToMainBoard, &channelParams[ChanIdx_ToMainBoard].recvPacket);
             }
         }
         else
@@ -150,10 +135,7 @@ void DwinProtocol_SendPack(DwinProtoChanIdx_t chan, const DwinPacket_t *packet)
     USART_TypeDef *uart;
     switch (chan)
     {
-    case ChanIdx_TouchPad:
-        uart = UART4;
-        break;
-    case ChanIdx_HandHeld:
+    case ChanIdx_ToMainBoard:
         uart = USART2;
         break;
     default:
