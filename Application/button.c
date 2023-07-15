@@ -6,6 +6,7 @@
 #include "cl_log.h"
 #include "comm.h"
 
+//****************button define***************************
 typedef enum
 {
     ButtonEvent_Down,      // 按下
@@ -30,7 +31,7 @@ typedef enum
     BtnIdx_Max,
 } ButtonIdx_t;
 
-void OnLightBtnEvent(ButtonEvent_t evt);
+static void OnLightBtnEvent(ButtonEvent_t evt);
 
 const ButtonDef_t buttonDef[BtnIdx_Max] =
     {
@@ -42,6 +43,7 @@ const ButtonDef_t buttonDef[BtnIdx_Max] =
         },
 };
 
+//****************button context***************************
 typedef enum
 {
     BtnSta_Up,
@@ -58,6 +60,11 @@ typedef struct
 
 ButtonContext_t buttonContext[BtnIdx_Max];
 
+static inline bool IsButtonDown(ButtonIdx_t butIdx)
+{
+    return LL_GPIO_IsInputPinSet(buttonDef[butIdx].port, buttonDef[butIdx].pin) == 0;
+}
+
 void Button_Init(void)
 {
     for (int i = 0; i < BtnIdx_Max; i++)
@@ -65,11 +72,6 @@ void Button_Init(void)
         buttonContext[i].status = BtnSta_Up;
         buttonContext[i].downTime = 0;
     }
-}
-
-static inline bool IsButtonDown(ButtonIdx_t butIdx)
-{
-    return LL_GPIO_IsInputPinSet(buttonDef[butIdx].port, buttonDef[butIdx].pin) == 0;
 }
 
 void Button_Process(void)
@@ -147,7 +149,7 @@ void Button_Process(void)
     }
 }
 
-void OnLightBtnEvent(ButtonEvent_t evt)  
+static void OnLightBtnEvent(ButtonEvent_t evt)  
 {
     switch (evt)
     {

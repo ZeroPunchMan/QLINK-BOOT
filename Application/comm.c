@@ -21,17 +21,6 @@ static bool OnMainBoardPack(void *eventArg)
 {
     CL_LOG_LINE("recv mainboard pack");
     DwinPacket_t *pack = (DwinPacket_t *)eventArg;
-    // switch (pack->cmd)
-    // {
-    // case HHC_Heartbeat:
-    //     OnRecvHeartbeat(pack);
-    // case HHC_Sync:
-    //     OnRecvSync(pack);
-    //     break;
-    // case HHC_Key:
-    //     OnRecvKey(pack);
-    //     break;
-    // }
 }
 
 static void SendSyncPack(void)
