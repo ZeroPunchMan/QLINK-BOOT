@@ -7,7 +7,7 @@
 #include "cl_event_system.h"
 #include "crc.h"
 
-const uint8_t packetHead[] = {0x5a, 0xa5};
+static const uint8_t packetHead[] = {0x5a, 0xa5};
 
 typedef enum
 {
@@ -24,21 +24,21 @@ typedef struct
     int parseCount;
     DwinPacket_t recvPacket;
     uint32_t lastRecvTime;
-} DwinChannelParam_t;
+} DwinChannelContext_t;
 
-DwinChannelParam_t channelParams[ChanIdx_Max];
+DwinChannelContext_t channelContexts[ChanIdx_Max];
 
 void DwinProtocol_Init(void)
 {
     for (int i = 0; i < ChanIdx_Max; i++)
     {
-        channelParams[i].parseStatus = PS_Head;
-        channelParams[i].parseCount = 0;
-        channelParams[i].lastRecvTime = 0;
+        channelContexts[i].parseStatus = PS_Head;
+        channelContexts[i].parseCount = 0;
+        channelContexts[i].lastRecvTime = 0;
     }
 }
 
-static inline bool ParseByte(DwinChannelParam_t *channel, uint8_t b)
+static inline bool ParseByte(DwinChannelContext_t *channel, uint8_t b)
 {
     // 超时判断,超过时间,认为是新的包
     if (SysTimeSpan(channel->lastRecvTime) >= DWIN_PACKET_TIMEOUT)
@@ -118,9 +118,9 @@ void DwinProtocol_Process(void)
     {
         if (Usart2_PollRecvByte(&data) == CL_ResSuccess)
         {
-            if (ParseByte(&channelParams[ChanIdx_ToMainBoard], data))
+            if (ParseByte(&channelContexts[ChanIdx_ToMainBoard], data))
             {
-                CL_EventSysRaise(CL_Event_RecvDwinPack, ChanIdx_ToMainBoard, &channelParams[ChanIdx_ToMainBoard].recvPacket);
+                CL_EventSysRaise(CL_Event_RecvDwinPack, ChanIdx_ToMainBoard, &channelContexts[ChanIdx_ToMainBoard].recvPacket);
             }
         }
         else
