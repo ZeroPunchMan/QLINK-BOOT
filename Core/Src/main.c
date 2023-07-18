@@ -29,6 +29,7 @@
 #include "helper.h"
 #include "button.h"
 #include "dfu.h"
+#include "sog_ymodem.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -62,7 +63,6 @@ void SystemClock_Config(void);
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
-
 /**
   * @brief  The application entry point.
   * @retval int
@@ -98,16 +98,19 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  SogYmodem_Init();
   Button_Init();
   while (1)
   {
     /* USER CODE END WHILE */
-    Button_Process();
+
     /* USER CODE BEGIN 3 */
+    SogYmodem_Process();
     static uint32_t lastTime = 0;
     if(SysTimeSpan(lastTime) >= 1000)
     {
         lastTime = GetSysTime();
+        // CL_LOG_LINE("boot: %us", GetSysTime() / 1000);
     }
 
     if(jumpToApp)

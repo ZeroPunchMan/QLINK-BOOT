@@ -9,7 +9,6 @@ typedef struct
 {
     uint32_t size;
     uint32_t hash;
-    uint32_t crc;
 } AppVerifyInfo_t;
 
 CL_Result_t EraseFlash(uint32_t addr, uint32_t pages);
@@ -77,18 +76,11 @@ CL_Result_t SaveAppInfo(uint32_t size, uint32_t hash)
 {
     appVerifyInfo.size = size;
     appVerifyInfo.hash = hash;
-    appVerifyInfo.crc = Ethernet_CRC32((const uint8_t *)&appVerifyInfo, CL_OFFSET_OF(AppVerifyInfo_t, crc));
 
-    //写入备份页
-    if (EraseFlash(APP_INFO_BAK_ADDR, 1) != CL_ResSuccess)
+    // 写入主存页
+    if (EraseFlash(APP_INFO_ADDR, 1) != CL_ResSuccess)
         return CL_ResFailed;
-    if(WriteFlash(APP_INFO_BAK_ADDR, (const uint8_t *)(&appVerifyInfo), sizeof(appVerifyInfo)) != CL_ResSuccess)
-        return CL_ResFailed;
-
-    //写入主存页
-     if (EraseFlash(APP_INFO_ADDR, 1) != CL_ResSuccess)
-        return CL_ResFailed;
-    if(WriteFlash(APP_INFO_ADDR, (const uint8_t *)(&appVerifyInfo), sizeof(appVerifyInfo)) != CL_ResSuccess)
+    if (WriteFlash(APP_INFO_ADDR, (const uint8_t *)(&appVerifyInfo), sizeof(appVerifyInfo)) != CL_ResSuccess)
         return CL_ResFailed;
 
     return CL_ResSuccess;
@@ -96,28 +88,8 @@ CL_Result_t SaveAppInfo(uint32_t size, uint32_t hash)
 
 CL_Result_t LoadAppInfo(void)
 {
-    const AppVerifyInfo_t *pInfo = (const AppVerifyInfo_t *)APP_INFO_ADDR;
-    if (Ethernet_CRC32((const uint8_t *)pInfo, CL_OFFSET_OF(AppVerifyInfo_t, crc)) == pInfo->crc)
-    { // 主存页有效
-        memcpy(&appVerifyInfo, (const void *)APP_INFO_ADDR, sizeof(appVerifyInfo));
-        return CL_ResSuccess;
-    }
-    else
-    { // 主存页无效
-        pInfo = (const AppVerifyInfo_t *)APP_INFO_BAK_ADDR;
-        if (Ethernet_CRC32((const uint8_t *)pInfo, CL_OFFSET_OF(AppVerifyInfo_t, crc)) == pInfo->crc)
-        { // 备份页有效
-            memcpy(&appVerifyInfo, (const void *)APP_INFO_BAK_ADDR, sizeof(appVerifyInfo));
-            // 写入主存页
-            if (EraseFlash(APP_INFO_ADDR, 1) != CL_ResSuccess)
-                return CL_ResFailed;
-            return WriteFlash(APP_INFO_ADDR, (const uint8_t *)(&appVerifyInfo), sizeof(appVerifyInfo));
-        }
-        else
-        {
-            return CL_ResFailed;
-        }
-    }
+    memcpy(&appVerifyInfo, (const void *)APP_INFO_ADDR, sizeof(appVerifyInfo));
+    return CL_ResSuccess;
 }
 
 CL_Result_t EraseFlash(uint32_t addr, uint32_t pages)
@@ -175,11 +147,11 @@ CL_Result_t CopyOtaBakToApp(void)
 
 CL_Result_t MarkNeedDfu(void)
 {
-    if(EraseFlash(DFU_FLAG_ADDR, 1) != CL_ResSuccess)
-        return  CL_ResFailed;
+    if (EraseFlash(DFU_FLAG_ADDR, 1) != CL_ResSuccess)
+        return CL_ResFailed;
 
     uint32_t mark[2] = {0x12345678, 0x87654321};
-    WriteFlash(DFU_FLAG_ADDR, (const uint8_t*)mark, sizeof(mark));
+    return WriteFlash(DFU_FLAG_ADDR, (const uint8_t *)mark, sizeof(mark));
 }
 //------------------------jump----------------------------------------
 typedef void (*pFunction)(void);

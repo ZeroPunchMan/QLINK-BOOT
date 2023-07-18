@@ -174,7 +174,7 @@ void USART1_IRQHandler(void)
   }
   else if (LL_USART_IsActiveFlag_ORE(USART1))
   {
-    data = LL_USART_ReceiveData8(USART1);
+    LL_USART_ClearFlag_ORE(USART1);
   }
 
   if (LL_USART_IsActiveFlag_TXE(USART1))
@@ -205,7 +205,7 @@ void USART2_IRQHandler(void)
   }
   else if (LL_USART_IsActiveFlag_ORE(USART2))
   {
-    data = LL_USART_ReceiveData8(USART2);
+    LL_USART_ClearFlag_ORE(USART2);
   }
 
   if (LL_USART_IsActiveFlag_TXE(USART2))

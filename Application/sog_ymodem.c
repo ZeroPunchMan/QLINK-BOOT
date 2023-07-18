@@ -14,6 +14,9 @@
 #include "firmware_info.h"
 #include "cl_serialize.h"
 #include "crc.h"
+#include "dwin_protocol.h"
+
+void SendNoValidApp(void);
 
 typedef enum
 {
@@ -76,34 +79,34 @@ static const uint8_t encryptTable[] = {
 static inline void SendAck(void)
 {
     uint8_t cmd = YMK_ACK; // 发ACK
-    Usartx_Send(USART1, &cmd, 0, 1);
+    Usartx_Send(USART2, &cmd, 0, 1);
     otaContext.timeoutTime = GetSysTime();
 }
 
 static inline void SendAckC(void)
 {
     uint8_t cmd[2] = {YMK_ACK, YMK_C}; // 发CAN
-    Usartx_Send(USART1, cmd, 0, sizeof(cmd));
+    Usartx_Send(USART2, cmd, 0, sizeof(cmd));
     otaContext.timeoutTime = GetSysTime();
 }
 
 static inline void SendC(void)
 {
     uint8_t cmd = YMK_C; // 发C
-    Usartx_Send(USART1, &cmd, 0, 1);
+    Usartx_Send(USART2, &cmd, 0, 1);
     otaContext.timeoutTime = GetSysTime();
 }
 
 static inline void SendDoubleCAN(void)
 {
     uint8_t cmd[2] = {YMK_CAN, YMK_CAN}; // 发CAN
-    Usartx_Send(USART1, cmd, 0, sizeof(cmd));
+    Usartx_Send(USART2, cmd, 0, sizeof(cmd));
 }
 
 // static inline void SendNak(void)
 //{
 //     uint8_t cmd = YMK_NAK; // 发C
-//     Usartx_Send(USART1, &cmd, 0, 1);
+//     Usartx_Send(USART2, &cmd, 0, 1);
 //     otaContext.timeoutTime = GetSysTime();
 // }
 
@@ -137,9 +140,11 @@ static inline TargetMcu_t PraseMcuxx(uint8_t byte)
             count = 0;
             return TargetMcu_1A;
         }
-        // else if (mcuIdx[0] == '2' && mcuIdx[1] == 'B')
-        // {
-        // }
+        else if (mcuIdx[0] == '2' && mcuIdx[1] == 'B')
+        {
+            count = 0;
+            return TargetMcu_2B;
+        }
         // else if (mcuIdx[0] == '3' && mcuIdx[1] == 'C')
         // {
         // }
@@ -225,7 +230,7 @@ static inline bool ParseFileNamePack(const YmodemPacket_t *packet)
             return false;
     }
 
-    if (strcmp(fileName, "Q3APP.bin") != 0) // 判断文件名
+    if (strcmp(fileName, "M10HHAPP.bin") != 0) // 判断文件名
         return false;
 
     int size = atoi(strSize);
@@ -328,7 +333,7 @@ static void RecvParser(void)
     volatile uint8_t byte;
     for (int i = 0; i < 100; i++)
     {
-        if (Usart1_PollRecvByte(&byte) == CL_ResSuccess)
+        if (Usart2_PollRecvByte(&byte) == CL_ResSuccess)
         {
             TargetMcu_t targetMcu = PraseMcuxx(byte);
             if (targetMcu != TargetMcu_Unkown)
@@ -378,7 +383,7 @@ bool OnRecvMcuxx(void *eventArg)
             otaContext.expectedPackNum = 0;
             SendC();
             otaContext.status = OtaStatus_WaitFileName; // 接收文件名
-            CL_LOG_LINE("recv MCU1A");
+            CL_LOG_LINE("recv MCU2B");
         }
     }
     else if (otaContext.status == OtaStatus_WaitFileName)
@@ -498,15 +503,9 @@ bool OnRecvYmodemPack(void *eventArg)
 static bool NeedOta(void)
 {
     bool res = false;
-//    uint32_t otaFlag = LL_RTC_BKP_GetRegister(0, LL_RTC_BKP_DR1);
-//    if (otaFlag == OTA_FLAG_VALUE)
-//    {
-//        LL_RTC_BKP_SetRegister(0, LL_RTC_BKP_DR1, 0x00);
-//        CL_LOG_LINE("normal ota");
-//        res = true;
-//    }
-    const uint32_t * pDfuFlag = (const uint32_t*)DFU_FLAG_ADDR;
-    if(pDfuFlag[0] == 0x12345678 && pDfuFlag[1] == 0x87654321)
+
+    const uint32_t *pDfuFlag = (const uint32_t *)DFU_FLAG_ADDR;
+    if (pDfuFlag[0] == 0x12345678 && pDfuFlag[1] == 0x87654321)
     {
         EraseFlash(DFU_FLAG_ADDR, 1);
         return true;
@@ -538,8 +537,8 @@ void SogYmodem_Process(void)
         RecvParser();   // 接收解析
         TimeoutCheck(); // 重发检测
     }
-    else //jump or error
-    {  
+    else // jump or error
+    {
         LoadAppInfo();
         bool appValid = IsAppValid();
         HAL_FLASH_Lock();
@@ -560,11 +559,12 @@ void SogYmodem_Process(void)
             }
             else
             { // bak也不可用,走升级流程
+                SendNoValidApp();
                 otaContext.status = OtaStatus_WaitMcuxx;
                 otaContext.targetMcu = TargetMcu_Unkown;
                 otaContext.timeoutTime = GetSysTime();
 
-                CL_LOG_LINE("no valid app, restart ota");
+                CL_LOG_LINE("no valid app, restart dfu");
             }
         }
         return;
@@ -576,4 +576,12 @@ void SogYmodem_Init(void)
     CL_EventSysAddListener(OnRecvMcuxx, CL_Event_RecvMcuxx, 0);
     CL_EventSysAddListener(OnRecvFwupgrade, CL_Event_RecvFwupgrade, 0);
     CL_EventSysAddListener(OnRecvYmodemPack, CL_Event_RecvYmodemPack, 0);
+}
+
+void SendNoValidApp(void)
+{
+    static DwinPacket_t sendPack;
+    sendPack.cmd = 0xff;
+    sendPack.length = 3;
+    DwinProtocol_SendPack(ChanIdx_ToMainBoard, &sendPack);
 }
