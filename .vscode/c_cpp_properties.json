@@ -27,7 +27,8 @@
                 "USART1",
                 "USART2",
                 "RCC",
-                "GPIOA"
+                "GPIOA",
+                "RTC"
             ],
             "cStandard": "c99",
             "browse": {

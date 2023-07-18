@@ -4,7 +4,6 @@
 #include "systime.h"
 #include "string.h"
 #include "cl_log.h"
-#include "comm.h"
 
 //****************button define***************************
 typedef enum
@@ -155,7 +154,6 @@ static void OnLightBtnEvent(ButtonEvent_t evt)
     {
     case ButtonEvent_Down:
         CL_LOG_LINE("light button down");
-        Comm_SendKeyEvent();
         break;
     case ButtonEvent_Click:
         CL_LOG_LINE("light button click");

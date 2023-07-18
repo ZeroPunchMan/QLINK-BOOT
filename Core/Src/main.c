@@ -18,8 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "adc.h"
-#include "dma.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -29,8 +27,8 @@
 #include "systime.h"
 #include "cl_log.h"
 #include "helper.h"
-#include "comm.h"
 #include "button.h"
+#include "dfu.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -51,7 +49,7 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+volatile bool jumpToApp = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -93,8 +91,6 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
@@ -102,19 +98,26 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  StartAdc();
-  Comm_Init();
   Button_Init();
   while (1)
   {
     /* USER CODE END WHILE */
-    Comm_Process();
     Button_Process();
     /* USER CODE BEGIN 3 */
     static uint32_t lastTime = 0;
     if(SysTimeSpan(lastTime) >= 1000)
     {
         lastTime = GetSysTime();
+    }
+
+    if(jumpToApp)
+    {
+      DelayOnSysTime(300);
+      Usart_Exit(USART1);
+      Usart_Exit(USART2);
+
+      SysTick->CTRL = 0x00;
+      JumpToApplication();
     }
   }
   /* USER CODE END 3 */

@@ -45,6 +45,7 @@ void MX_USART1_UART_Init(void);
 void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
+void Usart_Exit(USART_TypeDef *Usartx);
 CL_Result_t Usartx_Send(USART_TypeDef *Usartx, const uint8_t *data, uint16_t offset, uint16_t len);
 
 //***************************usart1*******************************

@@ -151,6 +151,25 @@ void MX_USART2_UART_Init(void)
 }
 
 /* USER CODE BEGIN 1 */
+void Usart_Exit(USART_TypeDef *Usartx)
+{
+    LL_USART_DisableIT_TXE(Usartx);
+    LL_USART_DisableIT_RXNE(Usartx);
+    LL_USART_Disable(Usartx);
+    LL_USART_DeInit(Usartx);
+    
+    if (Usartx == USART2)
+    {
+        LL_APB1_GRP1_DisableClock(LL_APB1_GRP1_PERIPH_USART2);
+        NVIC_DisableIRQ(USART2_IRQn);
+    }
+    else if (Usartx == USART1)
+    {
+        LL_APB1_GRP2_DisableClock(LL_APB1_GRP2_PERIPH_USART1);
+        NVIC_DisableIRQ(USART1_IRQn);
+    }
+}
+
 static inline void EnableTxe(USART_TypeDef *Usartx)
 {
     LL_USART_EnableIT_TXE(Usartx);

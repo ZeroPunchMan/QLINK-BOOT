@@ -17,7 +17,8 @@
         "stm32f0xx_ll_gpio.h": "c",
         "string.h": "c",
         "dwin_protocol.h": "c",
-        "firmware_info.h": "c"
+        "firmware_info.h": "c",
+        "crc.h": "c"
     },
     "files.exclude": {
         "**/.git": true,

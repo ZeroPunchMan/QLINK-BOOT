@@ -48,8 +48,8 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>m10_handheld\</OutputDirectory>
-          <OutputName>m10_handheld</OutputName>
+          <OutputDirectory>.\build\</OutputDirectory>
+          <OutputName>m10_handheld_boot</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -813,11 +813,6 @@
               <FilePath>..\Application\helper.c</FilePath>
             </File>
             <File>
-              <FileName>comm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Application\comm.c</FilePath>
-            </File>
-            <File>
               <FileName>button.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Application\button.c</FilePath>
@@ -828,14 +823,24 @@
               <FilePath>..\Application\crc.c</FilePath>
             </File>
             <File>
-              <FileName>firmware_info.c</FileName>
+              <FileName>dfu.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Application\firmware_info.c</FilePath>
+              <FilePath>..\Application\dfu.c</FilePath>
             </File>
             <File>
-              <FileName>dwin_protocol.c</FileName>
+              <FileName>sog_ymodem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Application\dwin_protocol.c</FilePath>
+              <FilePath>..\Application\sog_ymodem.c</FilePath>
+            </File>
+            <File>
+              <FileName>ymodem_helper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\ymodem_helper.c</FilePath>
+            </File>
+            <File>
+              <FileName>ymodem_pack_parse.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Application\ymodem_pack_parse.c</FilePath>
             </File>
           </Files>
         </Group>
