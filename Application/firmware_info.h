@@ -2,8 +2,8 @@
 
 #include "cl_common.h"
 
-#define ProductId_0 (0x00)
-#define ProductId_1 (0x15)
+#define ProductId_0 (0x80)
+#define ProductId_1 (0x17)
 
 typedef struct 
 {
@@ -13,9 +13,6 @@ typedef struct
     uint16_t verPatch;
     uint32_t check;
 } FirmwareInfo_t;
-
-extern const FirmwareInfo_t firmwareInfo;
-
 
 #define FIRMWARE_CHECK_VALUE(x0,x1,x2,x3,x4) \
     ((((x0) + (x1) + (x2) + 2333UL) * ((x3) + (x4) + UINT32_MAX)) ^ 0xdbef5328UL)

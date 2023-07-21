@@ -135,19 +135,11 @@ static inline TargetMcu_t PraseMcuxx(uint8_t byte)
     {
         mcuIdx[1] = byte;
         // 判断
-        if (mcuIdx[0] == '1' && mcuIdx[1] == 'A')
-        {
-            count = 0;
-            return TargetMcu_1A;
-        }
-        else if (mcuIdx[0] == '2' && mcuIdx[1] == 'B')
+        if (mcuIdx[0] == '2' && mcuIdx[1] == 'B')
         {
             count = 0;
             return TargetMcu_2B;
         }
-        // else if (mcuIdx[0] == '3' && mcuIdx[1] == 'C')
-        // {
-        // }
         else
         {
             count = 0; // error
@@ -275,7 +267,7 @@ static bool OnRecvFileDone(void)
     // 检查固件信息
     const FirmwareInfo_t *pFirmwareInfo = (const FirmwareInfo_t *)(DFU_BAK_START_ADDR + FIWMWARE_INFO_OFFSET);
     CL_LOG_LINE("check firmware info");
-    if (pFirmwareInfo->productId[0] != TARGET_PRODUCT_ID_0 || pFirmwareInfo->productId[1] != TARGET_PRODUCT_ID_1)
+    if (pFirmwareInfo->productId[0] != ProductId_0 || pFirmwareInfo->productId[1] != ProductId_1)
         return false;
 
     if (!FirmwareCheck(pFirmwareInfo))
@@ -375,7 +367,7 @@ bool OnRecvMcuxx(void *eventArg)
     TargetMcu_t *tm = (TargetMcu_t *)eventArg;
     if (otaContext.status == OtaStatus_WaitMcuxx)
     {
-        if (tm[0] == TargetMcu_1A)
+        if (tm[0] == TargetMcu_2B)
         {
             HAL_FLASH_Unlock(); // 需要升级,解锁flash
             EraseBakFlash();    // 擦除备份区
@@ -476,7 +468,7 @@ bool OnRecvYmodemPack(void *eventArg)
             { // 接收完成处理
                 SendAck();
                 // otaContext.status = OtaStatus_Jump;
-                CL_LOG_LINE("ota done, reboot");
+                CL_LOG_LINE("dfu done, reboot");
                 DelayOnSysTime(200);
                 NVIC_SystemReset();
             }
@@ -507,7 +499,9 @@ static bool NeedOta(void)
     const uint32_t *pDfuFlag = (const uint32_t *)DFU_FLAG_ADDR;
     if (pDfuFlag[0] == 0x12345678 && pDfuFlag[1] == 0x87654321)
     {
+        HAL_FLASH_Unlock();
         EraseFlash(DFU_FLAG_ADDR, 1);
+        HAL_FLASH_Lock();
         return true;
     }
 
@@ -524,7 +518,7 @@ void SogYmodem_Process(void)
             otaContext.status = OtaStatus_WaitMcuxx;
             SendAck();
 
-            CL_LOG_LINE("ready for ota, erase bak");
+            CL_LOG_LINE("ready for dfu, erase bak");
         }
         else
         {
