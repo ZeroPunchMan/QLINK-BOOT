@@ -6,8 +6,7 @@
 typedef void (*InitFunc)(void);
 typedef void (*SwitchFunc)(bool on);
 
-static void PwrBtnLed_Switch(bool on);
-static void IndLed_Switch(bool on);
+static void McuStaLed_Init(void);
 static void McuStaLed_Switch(bool on);
 
 typedef struct
@@ -23,9 +22,19 @@ typedef enum
 } LedIndex_t;
 
 const LedContext_t ledContext[LedIdx_Max] = {
-    [LedIdx_McuStatus] = {.initFunc = NULL, .switchFunc = McuStaLed_Switch},
+    [LedIdx_McuStatus] = {.initFunc = McuStaLed_Init, .switchFunc = McuStaLed_Switch},
 };
 
+static void McuStaLed_Init(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Pin = MCU_STA_LED_PIN;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+    LL_GPIO_Init(MCU_STA_LED_PORT, &GPIO_InitStruct);
+}
 static void McuStaLed_Switch(bool on)
 {
     if (on)
@@ -72,16 +81,6 @@ void Led_Init(void)
 void Led_Process(void)
 {
     McuLedProc();
-}
-
-void SetPowerButtonLed(bool on)
-{
-    ledContext[LedIdx_PwrBtn].switchFunc(on);
-}
-
-void SetIndicationLed(bool on)
-{
-    ledContext[LedIdx_Indication].switchFunc(on);
 }
 
 void SetMcuLedStyle(McuLedStyle_t style)

@@ -30,6 +30,7 @@
 #include "button.h"
 #include "dfu.h"
 #include "sog_ymodem.h"
+#include "led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,12 +100,14 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   SogYmodem_Init();
+  Led_Init();
   Button_Init();
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+    Led_Process();
     SogYmodem_Process();
     static uint32_t lastTime = 0;
     if(SysTimeSpan(lastTime) >= 1000)
