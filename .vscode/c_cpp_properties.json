@@ -14,7 +14,7 @@
             "defines": [
                 "USE_FULL_LL_DRIVER",
                 "USE_HAL_DRIVER",
-                "'STM32F030x8",
+                "STM32F030x8",
                 "uint32_t=unsigned int",
                 "int32_t=int",
                 "uint16_t=unsigned short",
@@ -22,13 +22,7 @@
                 "uint8_t=unsigned char",
                 "int8_t=char",
                 "__STATIC_INLINE=static inline",
-                "__attribute__(x)=",
-                "FLASH",
-                "USART1",
-                "USART2",
-                "RCC",
-                "GPIOA",
-                "RTC"
+                "__attribute__(x)="
             ],
             "cStandard": "c99",
             "browse": {
