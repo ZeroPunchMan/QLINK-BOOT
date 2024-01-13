@@ -35,8 +35,8 @@ static void OnLightBtnEvent(ButtonEvent_t evt);
 const ButtonDef_t buttonDef[BtnIdx_Max] =
     {
         [BtnIdx_Light] = {
-            .port = LIGHT_BTN_PORT,
-            .pin = LIGHT_BTN_PIN,
+            .port = KEY1_PORT,
+            .pin = KEY1_PIN,
             .press = 0,
             .evtCb = OnLightBtnEvent,
         },

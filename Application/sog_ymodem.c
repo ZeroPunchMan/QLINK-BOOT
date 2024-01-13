@@ -135,10 +135,10 @@ static inline TargetMcu_t PraseMcuxx(uint8_t byte)
     {
         mcuIdx[1] = byte;
         // 判断
-        if (mcuIdx[0] == '2' && mcuIdx[1] == 'B')
+        if (mcuIdx[0] == '1' && mcuIdx[1] == 'A')
         {
             count = 0;
-            return TargetMcu_2B;
+            return TargetMcu_1A;
         }
         else
         {
@@ -367,7 +367,7 @@ bool OnRecvMcuxx(void *eventArg)
     TargetMcu_t *tm = (TargetMcu_t *)eventArg;
     if (otaContext.status == OtaStatus_WaitMcuxx)
     {
-        if (tm[0] == TargetMcu_2B)
+        if (tm[0] == TargetMcu_1A)
         {
             HAL_FLASH_Unlock(); // 需要升级,解锁flash
             EraseBakFlash();    // 擦除备份区
@@ -508,12 +508,46 @@ static bool NeedOta(void)
     return res;
 }
 
+static void EnableBle(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
+
+    LL_GPIO_SetOutputPin(BLE_RST_PORT, BLE_RST_PIN);
+    GPIO_InitStruct.Pin = BLE_RST_PIN;
+    LL_GPIO_Init(BLE_RST_PORT, &GPIO_InitStruct);
+
+    LL_GPIO_SetOutputPin(BLE_PWR_PORT, BLE_PWR_PIN);
+    GPIO_InitStruct.Pin = BLE_PWR_PIN;
+    LL_GPIO_Init(BLE_PWR_PORT, &GPIO_InitStruct);
+
+    LL_GPIO_ResetOutputPin(LED1_EN_PORT, LED1_EN_PIN);
+    GPIO_InitStruct.Pin = LED1_EN_PIN;
+    LL_GPIO_Init(LED1_EN_PORT, &GPIO_InitStruct);
+
+    LL_GPIO_ResetOutputPin(LED2_EN_PORT, LED2_EN_PIN);
+    GPIO_InitStruct.Pin = LED2_EN_PIN;
+    LL_GPIO_Init(LED2_EN_PORT, &GPIO_InitStruct);
+
+    LL_GPIO_ResetOutputPin(LED3_EN_PORT, LED3_EN_PIN);
+    GPIO_InitStruct.Pin = LED3_EN_PIN;
+    LL_GPIO_Init(LED3_EN_PORT, &GPIO_InitStruct);
+
+    LL_GPIO_ResetOutputPin(LED4_EN_PORT, LED4_EN_PIN);
+    GPIO_InitStruct.Pin = LED4_EN_PIN;
+    LL_GPIO_Init(LED4_EN_PORT, &GPIO_InitStruct);
+}
+
 void SogYmodem_Process(void)
 {
     if (otaContext.status == OtaStatus_Idle)
     {
         if (NeedOta())
         {
+            EnableBle();
             DelayOnSysTime(300);
             otaContext.status = OtaStatus_WaitMcuxx;
             SendAck();
@@ -553,6 +587,7 @@ void SogYmodem_Process(void)
             }
             else
             { // bak也不可用,走升级流程
+                EnableBle();
                 SendNoValidApp();
                 otaContext.status = OtaStatus_WaitMcuxx;
                 otaContext.targetMcu = TargetMcu_Unkown;
