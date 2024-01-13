@@ -2,8 +2,8 @@
 
 #include "cl_common.h"
 
-#define ProductId_0 (0x80)
-#define ProductId_1 (0x17)
+#define ProductId_0 (0x00)
+#define ProductId_1 (0x20)
 
 typedef struct 
 {

@@ -31,6 +31,7 @@
 #include "dfu.h"
 #include "sog_ymodem.h"
 #include "led.h"
+#include "flash_layout.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -72,6 +73,13 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  volatile uint32_t* pVector = (volatile uint32_t*)0x20000000;
+  for(uint32_t i = 0; i < 50; i++)
+  {
+    pVector[i] = ((volatile uint32_t*)FLASH_START_ADDR)[i];
+  }
+  LL_SYSCFG_SetRemapMemory(LL_SYSCFG_REMAP_SRAM);
+
   CL_EventSysInit();
   /* USER CODE END 1 */
 

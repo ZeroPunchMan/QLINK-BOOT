@@ -16,7 +16,6 @@
 #include "crc.h"
 #include "dwin_protocol.h"
 
-void SendNoValidApp(void);
 
 typedef enum
 {
@@ -222,7 +221,7 @@ static inline bool ParseFileNamePack(const YmodemPacket_t *packet)
             return false;
     }
 
-    if (strcmp(fileName, "M10HHAPP.bin") != 0) // 判断文件名
+    if (strcmp(fileName, "P3_0APP.bin") != 0) // 判断文件名
         return false;
 
     int size = atoi(strSize);
@@ -510,6 +509,8 @@ static bool NeedOta(void)
 
 static void EnableBle(void)
 {
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOA | LL_AHB1_GRP1_PERIPH_GPIOB | LL_AHB1_GRP1_PERIPH_GPIOC | LL_AHB1_GRP1_PERIPH_GPIOD);
+
     LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
@@ -588,7 +589,6 @@ void SogYmodem_Process(void)
             else
             { // bak也不可用,走升级流程
                 EnableBle();
-                SendNoValidApp();
                 otaContext.status = OtaStatus_WaitMcuxx;
                 otaContext.targetMcu = TargetMcu_Unkown;
                 otaContext.timeoutTime = GetSysTime();
@@ -605,12 +605,4 @@ void SogYmodem_Init(void)
     CL_EventSysAddListener(OnRecvMcuxx, CL_Event_RecvMcuxx, 0);
     CL_EventSysAddListener(OnRecvFwupgrade, CL_Event_RecvFwupgrade, 0);
     CL_EventSysAddListener(OnRecvYmodemPack, CL_Event_RecvYmodemPack, 0);
-}
-
-void SendNoValidApp(void)
-{
-    static DwinPacket_t sendPack;
-    sendPack.cmd = 0xff;
-    sendPack.length = 3;
-    DwinProtocol_SendPack(ChanIdx_ToMainBoard, &sendPack);
 }

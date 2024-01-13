@@ -18,7 +18,8 @@
         "string.h": "c",
         "dwin_protocol.h": "c",
         "firmware_info.h": "c",
-        "crc.h": "c"
+        "crc.h": "c",
+        "flash_layout.h": "c"
     },
     "files.exclude": {
         "**/.git": true,
