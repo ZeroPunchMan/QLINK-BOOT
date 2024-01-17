@@ -16,7 +16,6 @@
 #include "crc.h"
 #include "dwin_protocol.h"
 
-
 typedef enum
 {
     OtaStatus_Idle, //
@@ -501,6 +500,13 @@ static bool NeedOta(void)
         HAL_FLASH_Unlock();
         EraseFlash(DFU_FLAG_ADDR, 1);
         HAL_FLASH_Lock();
+        return true;
+    }
+
+    if (!LL_GPIO_IsInputPinSet(KEY1_PORT, KEY1_PIN) &&
+        !LL_GPIO_IsInputPinSet(KEY2_PORT, KEY2_PIN) &&
+        !LL_GPIO_IsInputPinSet(KEY3_PORT, KEY3_PIN))
+    {
         return true;
     }
 

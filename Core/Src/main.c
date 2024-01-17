@@ -120,7 +120,6 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   SogYmodem_Init();
   Led_Init();
-  Button_Init();
   while (1)
   {
     /* USER CODE END WHILE */
