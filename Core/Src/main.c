@@ -28,7 +28,6 @@
 #include "systime.h"
 #include "cl_log.h"
 #include "helper.h"
-#include "button.h"
 #include "dfu.h"
 #include "sog_ymodem.h"
 #include "led.h"
@@ -140,7 +139,6 @@ int main(void)
       LL_IWDG_ReloadCounter(IWDG);
       DelayOnSysTime(300);
       Usart_Exit(USART1);
-      Usart_Exit(USART2);
 
       SysTick->CTRL = 0x00;
       JumpToApplication();

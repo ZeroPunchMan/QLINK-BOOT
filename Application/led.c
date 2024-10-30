@@ -44,7 +44,7 @@ static void McuStaLed_Switch(bool on)
 }
 
 //------------------------------------------
-static McuLedStyle_t mcuLedStyle = McuLedStyle_SlowBlink;
+static McuLedStyle_t mcuLedStyle = McuLedStyle_FastBlink;
 
 void McuLedProc(void)
 {

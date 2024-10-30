@@ -18,7 +18,7 @@ typedef enum
 
 //---------------log-------------------------
 #include "stdio.h"
-#define USE_LDB_LOG
+// #define USE_LDB_LOG
 #define CL_PRINTF   printf
 
 #ifdef __cplusplus

@@ -220,7 +220,7 @@ static inline bool ParseFileNamePack(const YmodemPacket_t *packet)
             return false;
     }
 
-    if (strcmp(fileName, "P3_2APP.bin") != 0) // 判断文件名
+    if (strcmp(fileName, "XXAPP.bin") != 0) // 判断文件名
         return false;
 
     int size = atoi(strSize);
