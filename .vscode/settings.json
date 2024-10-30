@@ -19,7 +19,8 @@
         "dwin_protocol.h": "c",
         "firmware_info.h": "c",
         "crc.h": "c",
-        "flash_layout.h": "c"
+        "flash_layout.h": "c",
+        "cl_log.h": "c"
     },
     "files.exclude": {
         "**/.git": true,

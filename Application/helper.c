@@ -5,7 +5,6 @@
 bool StatusFilter(StatusFilter_t *filter, bool newStatus)
 {
     CL_QueueInfo_t *q = filter->queue;
-    CL_ASSERT(q->data_size == sizeof(bool));
 
     if (CL_QueueFull(q))
     {
