@@ -42,7 +42,6 @@ CL_QUEUE_DECL(usart2SendQueue);
 /* USER CODE END Private defines */
 
 void MX_USART1_UART_Init(void);
-void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN Prototypes */
 void Usart_Exit(USART_TypeDef *Usartx);

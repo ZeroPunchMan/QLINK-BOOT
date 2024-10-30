@@ -81,6 +81,7 @@ void Iwdg_Process(void)
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
   volatile uint32_t* pVector = (volatile uint32_t*)0x20000000;
   for(uint32_t i = 0; i < 50; i++)
@@ -111,7 +112,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
-  MX_USART2_UART_Init();
   MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
