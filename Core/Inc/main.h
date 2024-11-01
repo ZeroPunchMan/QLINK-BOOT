@@ -29,7 +29,6 @@ extern "C" {
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal.h"
 
-#include "stm32f0xx_ll_iwdg.h"
 #include "stm32f0xx_ll_usart.h"
 #include "stm32f0xx_ll_rcc.h"
 #include "stm32f0xx_ll_system.h"

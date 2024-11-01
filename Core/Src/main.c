@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "iwdg.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -63,15 +62,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void Iwdg_Process(void)
-{
-  static uint32_t lastTime = 0;
-  if(SysTimeSpan(lastTime) > SYSTIME_SECOND(2))
-  {
-    lastTime = GetSysTime();
-    LL_IWDG_ReloadCounter(IWDG);
-  }
-}
 /* USER CODE END 0 */
 
 /**
@@ -111,7 +101,6 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART1_UART_Init();
-  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
   /* USER CODE END 2 */
 
@@ -124,7 +113,6 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    Iwdg_Process();
     Led_Process();
     SogYmodem_Process();
     static uint32_t lastTime = 0;
@@ -136,7 +124,6 @@ int main(void)
 
     if(jumpToApp)
     {
-      LL_IWDG_ReloadCounter(IWDG);
       DelayOnSysTime(300);
       Usart_Exit(USART1);
 
@@ -160,10 +147,9 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLMUL = RCC_PLL_MUL12;
