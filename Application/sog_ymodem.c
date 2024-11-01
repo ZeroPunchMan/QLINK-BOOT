@@ -76,34 +76,34 @@ static const uint8_t encryptTable[] = {
 static inline void SendAck(void)
 {
     uint8_t cmd = YMK_ACK; // 发ACK
-    Usartx_Send(USART2, &cmd, 0, 1);
+    Usartx_Send(USART1, &cmd, 0, 1);
     otaContext.timeoutTime = GetSysTime();
 }
 
 static inline void SendAckC(void)
 {
     uint8_t cmd[2] = {YMK_ACK, YMK_C}; // 发CAN
-    Usartx_Send(USART2, cmd, 0, sizeof(cmd));
+    Usartx_Send(USART1, cmd, 0, sizeof(cmd));
     otaContext.timeoutTime = GetSysTime();
 }
 
 static inline void SendC(void)
 {
     uint8_t cmd = YMK_C; // 发C
-    Usartx_Send(USART2, &cmd, 0, 1);
+    Usartx_Send(USART1, &cmd, 0, 1);
     otaContext.timeoutTime = GetSysTime();
 }
 
 static inline void SendDoubleCAN(void)
 {
     uint8_t cmd[2] = {YMK_CAN, YMK_CAN}; // 发CAN
-    Usartx_Send(USART2, cmd, 0, sizeof(cmd));
+    Usartx_Send(USART1, cmd, 0, sizeof(cmd));
 }
 
 // static inline void SendNak(void)
 //{
 //     uint8_t cmd = YMK_NAK; // 发C
-//     Usartx_Send(USART2, &cmd, 0, 1);
+//     Usartx_Send(USART1, &cmd, 0, 1);
 //     otaContext.timeoutTime = GetSysTime();
 // }
 
@@ -322,7 +322,7 @@ static void RecvParser(void)
     volatile uint8_t byte;
     for (int i = 0; i < 100; i++)
     {
-        if (Usart2_PollRecvByte(&byte) == CL_ResSuccess)
+        if (Usart1_PollRecvByte(&byte) == CL_ResSuccess)
         {
             TargetMcu_t targetMcu = PraseMcuxx(byte);
             if (targetMcu != TargetMcu_Unkown)
