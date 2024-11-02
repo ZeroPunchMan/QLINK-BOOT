@@ -5,7 +5,7 @@
 
 typedef struct
 {
-    CL_QueueInfo_t *queue;
+    CL_Queue_t *queue;
     uint32_t count;
     bool status;
 } StatusFilter_t;

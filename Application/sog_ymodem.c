@@ -228,7 +228,7 @@ static inline bool ParseFileNamePack(const YmodemPacket_t *packet)
 
     otaContext.binFileSize = size; // 记录下bin文件大小
 
-    CL_LOG_LINE("recv file name: %s, total size: %d", fileName, size);
+    CL_LOG_INFO("recv file name: %s, total size: %d", fileName, size);
 
     return true;
 }
@@ -263,7 +263,7 @@ static bool OnRecvFileDone(void)
     // 校验bak区内容有效性
     // 检查固件信息
     const FirmwareInfo_t *pFirmwareInfo = (const FirmwareInfo_t *)(DFU_BAK_START_ADDR + FIWMWARE_INFO_OFFSET);
-    CL_LOG_LINE("check firmware info");
+    CL_LOG_INFO("check firmware info");
     if (pFirmwareInfo->productId[0] != ProductId_0 || pFirmwareInfo->productId[1] != ProductId_1)
         return false;
 
@@ -271,16 +271,16 @@ static bool OnRecvFileDone(void)
         return false;
 
     // 最后4字节是crc
-    CL_LOG_LINE("check crc");
+    CL_LOG_INFO("check crc");
     uint32_t crcCalc = Ethernet_CRC32((const uint8_t *)DFU_BAK_START_ADDR, otaContext.binFileSize - 4);
     uint32_t crcRecv = CL_BytesToUint32((const uint8_t *)DFU_BAK_START_ADDR + otaContext.binFileSize - 4, CL_BigEndian);
     if (crcCalc != crcRecv)
         return false;
 
-    CL_LOG_LINE("save app, size: %d, crc: %x--%x", otaContext.binFileSize - 4, crcCalc, crcRecv);
+    CL_LOG_INFO("save app, size: %d, crc: %x--%x", otaContext.binFileSize - 4, crcCalc, crcRecv);
     if (SaveAppInfo(otaContext.binFileSize - 4, crcCalc) != CL_ResSuccess)
         return false; // 保存APP校验信息
-    CL_LOG_LINE("copy to app");
+    CL_LOG_INFO("copy to app");
     if (CopyOtaBakToApp() != CL_ResSuccess)
         return false; // 可用,bak覆盖到app
 
@@ -303,14 +303,14 @@ static inline bool ParseFileDataPack(YmodemPacket_t *packet, bool *fileDone)
         }
 
         otaContext.receivedSize += remFileSize;
-        CL_LOG_LINE("recv last pack: %d", packet->packNum);
+        CL_LOG_INFO("recv last pack: %d", packet->packNum);
         OnRecvFileData(packet->data, remFileSize);
         fileDone[0] = true; // 接收完成了
     }
     else
     {
         otaContext.receivedSize += packet->dataLen;
-        CL_LOG_LINE("recv pack: %d", packet->packNum);
+        CL_LOG_INFO("recv pack: %d", packet->packNum);
         OnRecvFileData(packet->data, packet->dataLen);
     }
 
@@ -354,7 +354,7 @@ static void TimeoutCheck(void)
         if (otaContext.status >= OtaStatus_WaitMcuxx && otaContext.status <= OtaStatus_WaitEot)
         {
             ToError(); // 超时了,直接取消,不做重发
-            CL_LOG_LINE("dfu time out");
+            CL_LOG_INFO("dfu time out");
         }
     }
 }
@@ -372,7 +372,7 @@ bool OnRecvMcuxx(void *eventArg)
             otaContext.expectedPackNum = 0;
             SendC();
             otaContext.status = OtaStatus_WaitFileName; // 接收文件名
-            CL_LOG_LINE("recv MCU2B");
+            CL_LOG_INFO("recv MCU2B");
         }
     }
     else if (otaContext.status == OtaStatus_WaitFileName)
@@ -388,7 +388,7 @@ bool OnRecvFwupgrade(void *eventArg)
     if (otaContext.status == OtaStatus_WaitMcuxx)
     {
         SendAck();
-        CL_LOG_LINE("recv fwupgrade");
+        CL_LOG_INFO("recv fwupgrade");
     }
 
     return true;
@@ -415,7 +415,7 @@ bool OnRecvYmodemPack(void *eventArg)
         }
         else
         { // 第一包错误
-            CL_LOG_LINE("file name error");
+            CL_LOG_INFO("file name error");
             ToError();
         }
         break;
@@ -423,24 +423,24 @@ bool OnRecvYmodemPack(void *eventArg)
         if (packet->packNum == 0 && otaContext.receivedSize == 0)
         { // 重发文件名,响应即可,不重新处理
             SendAckC();
-            CL_LOG_LINE("resend file name");
+            CL_LOG_INFO("resend file name");
         }
         else if (packet->packNum + 1 == otaContext.expectedPackNum)
         { // 重发文件数据包,响应即可,不重新处理
             SendAck();
-            CL_LOG_LINE("resend pack: %d", packet->packNum);
+            CL_LOG_INFO("resend pack: %d", packet->packNum);
         }
         else if (packet->packNum == otaContext.expectedPackNum)
         {
             bool fileRecvDone;
             if (ParseFileDataPack(packet, &fileRecvDone))
             {
-                CL_LOG_LINE("recv pack: %d, total size: %d", otaContext.expectedPackNum, otaContext.receivedSize);
+                CL_LOG_INFO("recv pack: %d, total size: %d", otaContext.expectedPackNum, otaContext.receivedSize);
                 otaContext.expectedPackNum++; // 包计数+1
 
                 if (fileRecvDone)
                 {
-                    CL_LOG_LINE("recv done");
+                    CL_LOG_INFO("recv done");
                     otaContext.status = OtaStatus_WaitEot; // 接收完成了,等EOT
                 }
 
@@ -448,13 +448,13 @@ bool OnRecvYmodemPack(void *eventArg)
             }
             else
             {
-                CL_LOG_LINE("cpmeof error");
+                CL_LOG_INFO("cpmeof error");
                 ToError();
             }
         }
         else
         {
-            CL_LOG_LINE("pack num error");
+            CL_LOG_INFO("pack num error");
             ToError();
         }
         break;
@@ -465,13 +465,13 @@ bool OnRecvYmodemPack(void *eventArg)
             { // 接收完成处理
                 SendAck();
                 // otaContext.status = OtaStatus_Jump;
-                CL_LOG_LINE("dfu done, reboot");
+                CL_LOG_INFO("dfu done, reboot");
                 DelayOnSysTime(200);
                 NVIC_SystemReset();
             }
             else
             {
-                CL_LOG_LINE("file verify error");
+                CL_LOG_INFO("file verify error");
                 ToError();
             }
         }
@@ -480,7 +480,7 @@ bool OnRecvYmodemPack(void *eventArg)
             if (packet->packNum + 1 == otaContext.expectedPackNum)
             {
                 SendAck();
-                CL_LOG_LINE("resend last pack");
+                CL_LOG_INFO("resend last pack");
             }
         }
         break;
@@ -517,12 +517,12 @@ void SogYmodem_Process(void)
             otaContext.status = OtaStatus_WaitMcuxx;
             SendAck();
 
-            CL_LOG_LINE("ready for dfu, erase bak");
+            CL_LOG_INFO("ready for dfu, erase bak");
         }
         else
         {
             otaContext.status = OtaStatus_Jump;
-            CL_LOG_LINE("don't need ota");
+            CL_LOG_INFO("don't need ota");
         }
     }
     else if (otaContext.status >= OtaStatus_WaitMcuxx && otaContext.status <= OtaStatus_WaitEot)
@@ -538,7 +538,7 @@ void SogYmodem_Process(void)
         if (appValid)
         { // app可用,直接跳转
             jumpToApp = true;
-            CL_LOG_LINE("jump ready");
+            CL_LOG_INFO("jump ready");
         }
         else
         { // app不可用,检查bak
@@ -548,7 +548,7 @@ void SogYmodem_Process(void)
                 HAL_FLASH_Unlock();
                 CopyOtaBakToApp();
                 HAL_FLASH_Lock();
-                CL_LOG_LINE("bak valid, copy to app");
+                CL_LOG_INFO("bak valid, copy to app");
             }
             else
             { // bak也不可用,走升级流程
@@ -556,7 +556,7 @@ void SogYmodem_Process(void)
                 otaContext.targetMcu = TargetMcu_Unkown;
                 otaContext.timeoutTime = GetSysTime();
 
-                CL_LOG_LINE("no valid app, restart dfu");
+                CL_LOG_INFO("no valid app, restart dfu");
             }
         }
         return;

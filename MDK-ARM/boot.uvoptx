@@ -157,9 +157,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>78</LineNumber>
+          <LineNumber>367</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134226790</Address>
+          <Address>134225482</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -168,7 +168,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\Application\sog_ymodem.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\XXBOOT\../Application/sog_ymodem.c\78</Expression>
+          <Expression>\\XXBOOT\../Application/sog_ymodem.c\367</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>

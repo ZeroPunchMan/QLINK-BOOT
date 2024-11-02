@@ -64,7 +64,7 @@ void McuLedProc(void)
         ledOn = !ledOn;
         ledContext[LedIdx_McuStatus].switchFunc(ledOn);
 
-        // CL_LOG_LINE("ble led: %d", ledOn);
+        // CL_LOG_INFO("ble led: %d", ledOn);
     }
 }
 

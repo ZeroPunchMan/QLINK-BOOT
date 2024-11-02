@@ -4,7 +4,7 @@
 //***********************状态滤波****************************
 bool StatusFilter(StatusFilter_t *filter, bool newStatus)
 {
-    CL_QueueInfo_t *q = filter->queue;
+    CL_Queue_t *q = filter->queue;
 
     if (CL_QueueFull(q))
     {

@@ -118,7 +118,7 @@ static inline void EnableTxe(USART_TypeDef *Usartx)
 
 CL_Result_t Usartx_Send(USART_TypeDef *Usartx, const uint8_t *data, uint16_t offset, uint16_t len)
 {
-    CL_QueueInfo_t *queue;
+    CL_Queue_t *queue;
     if (Usartx == USART1)
         queue = &usart1SendQueue;
     else

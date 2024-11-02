@@ -46,7 +46,7 @@ const YmodemPacket_t *YmodemParseByte(uint8_t byte)
             recvPacket.dataLen = 0; // 数据长度清零
 
             packParseStatus = PPS_PackNum;
-            // CL_LOG_LINE("recv head: %x", byte);
+            // CL_LOG_INFO("recv head: %x", byte);
         }
         else if (byte == YMK_EOT)
         {
@@ -62,7 +62,7 @@ const YmodemPacket_t *YmodemParseByte(uint8_t byte)
     case PPS_PackNum:
         recvPacket.packNum = byte; // 包计数
         packParseStatus = PPS_InvPackNum;
-        // CL_LOG_LINE("recv pack num: %x", byte);
+        // CL_LOG_INFO("recv pack num: %x", byte);
         break;
 
     case PPS_InvPackNum:
@@ -71,13 +71,13 @@ const YmodemPacket_t *YmodemParseByte(uint8_t byte)
             // 包计数反码正确,准备解析数据段
             recvPacket.invPackNum = byte;
             packParseStatus = PPS_Data;
-            // CL_LOG_LINE("recv pack inv: %x", byte);
+            // CL_LOG_INFO("recv pack inv: %x", byte);
         }
         else
         {
             // 包计数反码错误,重新回到解析head状态
             packParseStatus = PPS_Head;
-            // CL_LOG_LINE("pack inv illegal");
+            // CL_LOG_INFO("pack inv illegal");
         }
         break;
 
@@ -86,31 +86,31 @@ const YmodemPacket_t *YmodemParseByte(uint8_t byte)
         if (recvPacket.dataLen >= GetDataBlockSize(recvPacket.head))
         {
             packParseStatus = PPS_CrcH;
-            // CL_LOG_LINE("recv data ok");
+            // CL_LOG_INFO("recv data ok");
         }
         break;
 
     case PPS_CrcH:
         recvPacket.crc = (uint16_t)byte << 8;
         packParseStatus = PPS_CrcL;
-        // CL_LOG_LINE("recv crc h");
+        // CL_LOG_INFO("recv crc h");
 
         break;
 
     case PPS_CrcL:
         recvPacket.crc |= byte;
-        // CL_LOG_LINE("recv crc l");
+        // CL_LOG_INFO("recv crc l");
 
         uint16_t crc = CalcYmodemCrc(recvPacket.data, 0, GetDataBlockSize(recvPacket.head));
         if (recvPacket.crc == crc)
         {                               // 接收到的crc正确
             packParseStatus = PPS_Head; // 状态重设为解析head
-            // CL_LOG_LINE("crc ok");
+            // CL_LOG_INFO("crc ok");
             return &recvPacket; // 返回packet
         }
         else
         { // crc错误,重新回到解析head状态
-            // CL_LOG_LINE("crc error");
+            // CL_LOG_INFO("crc error");
             packParseStatus = PPS_Head;
         }
         break;
